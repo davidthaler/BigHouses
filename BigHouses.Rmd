@@ -118,6 +118,28 @@ g + coord_map()
 The setting `inherit.aes=FALSE` is needed because the data in `millions.df`
 is point data, so it does not have a `group` variable, so we have to reset `aes`.
 
+### Maps with ggmap
+
+*Hat Tip to
+[AdhokshajaPradeep](https://www.kaggle.com/adhok93) in the kernel 
+[Data Analysis with ggmap](https://www.kaggle.com/adhok93/d/foenix/slc-crime/data-analysis-with-ggmap) 
+for this trick/workaround.*
+
+The `ggmap` package allows downloads of a very wide range of maps as `ggplot` layers.
+In the Kaggle kernels environment, we can't go out to an API, so we can't use `ggmap`.
+Locally, I used the code below to produce this map as an image.
+
+![](img/Million.png)
+
+```{r echo=TRUE, eval=FALSE}
+# Use: {r echo=TRUE, eval=FALSE} on chunk to see code without running it
+sea.ggmap <- get_map(location='Seattle', source='stamen', zoom=11, maptype='toner-lite')
+g <- ggmap(sea.ggmap)
+g <- g + geom_point(data=millions.df, aes(x=long, y=lat), inherit.aes=FALSE,
+                    color='dodgerblue', alpha=0.2)
+g + ggtitle('$1 Million Houses in ggmap')
+```
+
 ### Raster Maps
 
 Raster maps are good for visualizing fields. 
