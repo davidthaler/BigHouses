@@ -77,12 +77,6 @@ plot(seamap, main='Seattle...Now With Houses!')
 plot(hs.sea, add=T, pch=20)
 ```
 
-There is a pretty obvious anomaly on the East shoreline, where the houses end well before the shore. 
-I have investigated it locally/offline by plotting the house data on a shoreline/boundary map from the City of Seattle (that is, on a better map).
-On the better map, the points look fine.
-The anomaly seems to be due to excessive polygon smoothing in the map included in the `USCensus2000cdp` package.
-If it was a projection error, the West side shoreline and North and South boundaries would look worse.
-
 At this point we can do things like map the houses that sold for at least $1,000,000.
 
 ```{r million.bucks}
@@ -94,6 +88,22 @@ plot(millions, add=T, pch=20)
 We see that a lot of those are waterfront properties. 
 And generally the expensive houses are North of downtown.
 (Downtown is on the harbor on the West side)
+
+### Shoreline Anomaly
+
+There is a pretty obvious anomaly on the East shoreline, where the houses end well before the shore. 
+I have investigated it locally/offline by plotting the house data on a shoreline/boundary map from the City of Seattle (that is, on a better map).
+On the better map, the points look fine.
+Here are the $1 million houses on the City basemap.
+
+![](img/CityBasemap.png)
+
+The anomaly seems to be due to excessive polygon smoothing in the map included in the `USCensus2000cdp` package. 
+Here is a comparison of the boundaries between the City map and the one in `USCensus2000cdp`.
+
+![](img/BoundaryComp.png)
+
+### Maps in ggplot
 
 In `ggplot` the map is made like this:
 
