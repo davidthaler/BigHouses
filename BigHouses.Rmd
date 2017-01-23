@@ -8,6 +8,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(sp)
+library(rgeos)
 library(raster)
 library(rasterVis)
 library(readr)
@@ -61,10 +62,10 @@ We are mapping, so we will put the data into a spatial data structure.
 cos <- as.matrix(select(kchouse, long, lat))
 hse <- as.data.frame(select(kchouse, -c(long, lat)))
 hs.pts <- SpatialPointsDataFrame(cos, hse, proj4string=CRS(proj4string(seamap)))
-plot(hs.pts, pch=20)
+hs.pts
 ```
 
-That doesn't make too much sense with no basemap, and we still need to subset to Seattle. To subset, we use the `%over%` operator.
+To subset, we use the `%over%` operator.
 For arguments of class `SpatialPoints` and `SpatialPolygons`, 
 it returns a vector as long as the points, where each number is the 
 index of the polygon containing the corresponding point, 
@@ -73,10 +74,20 @@ See: `?over,Spatial,Spatial-method` for more information.
 
 ```{r spatial.subset}
 hs.sea <- subset(hs.pts, !is.na(hs.pts %over% seamap))
-plot(seamap, main='Seattle...Now With Houses!')
-plot(hs.sea, add=T, pch=20)
 ```
 
+We can also use `rgeos::gWithin` but the return types are weird, 
+so it takes more fiddling.
+
+```{r subset2, results='hold'}
+isin <- gWithin(hs.pts, seamap, byid=TRUE)
+class(isin)
+dim(isin)
+str(isin)
+hs.sea2 <- subset(hs.pts, as.logical(isin))
+```
+
+The cast at the end is because `gWithin` returns a matrix, not a logical vector.
 At this point we can do things like map the houses that sold for at least $1,000,000.
 
 ```{r million.bucks}
