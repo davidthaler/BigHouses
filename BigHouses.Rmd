@@ -16,7 +16,7 @@ library(tidyr)
 library(dplyr)
 library(stringr)
 library(ggplot2)
-data.path <- '../data/kc_house_data.csv'
+data.path <- '../input/kc_house_data.csv'
 ```
 
 ### Overview
@@ -49,7 +49,6 @@ data("washington.cdp")
 seamap <- subset(washington.cdp, washington.cdp$name=='Seattle')
 seamap <- SpatialPolygons(seamap@polygons, seamap@plotOrder, 
                          proj4string = CRS(proj4string(seamap)))
-plot(seamap, main='A Basic Seattle Map')
 ```
 
 We changed `seamap` from `sp::SpatialPointsDataFrame` to `sp::SpatialPolygons` because we don't need any of the 2000 Census data.
